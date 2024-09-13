@@ -1,62 +1,6 @@
 import "./style.css";
-
-class Todo{
-    constructor(title, description, dueDate, priority){
-        this.title = title;
-        this.description = description;
-        //this.dueDate = new Date();
-        this.dueDate = dueDate;
-        this.priority =priority;
-    }
-
-    get name(){
-        return this.title;
-    }
-
-}
-
-class Project{
-    constructor(name){
-        this.name = name;
-        this.projArray = [];
-    }
-
-    addTodo(todo){
-        this.projArray.push(todo);
-    }
-
-    editTodo(id, editedTodo){
-        let whichTodo = this.projArray[id];
-        let editedTask = editedTodo;
-        let counter = 0;
-
-        for(const val in whichTodo){
-            if(editedTask[counter].value !== whichTodo[val]){
-                console.log("we have an edity");
-            }
-            counter++;
-        }
-
-    }
-
-    get Todo(){
-        return this.projArray;
-    }
-
-
-    removeTodo(todo){
-        let indexToRemove = this.projArray.findIndex((element) => element == todo);
-        this.projArray.splice(indexToRemove, 1);
-        
-    }
-
-    listTodo(){
-        //console.log(this.projArray);
-        for(const todo of this.projArray){
-            console.log(todo);
-        }
-    }
-}
+import Todo from "./todo.js";
+import Project from "./project.js";
 
 
 let kont = new Todo("val0", "fds", "datey", "not high");
@@ -94,6 +38,9 @@ function populateTodos(project){
         let testButton = document.createElement("button");
         testButton.textContent = "subby";
 
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "delete";
+
         testButton.addEventListener("click", function(){
             let parentDiv = this.parentElement;
             let collectionArray = parentDiv.querySelectorAll("input");
@@ -101,7 +48,14 @@ function populateTodos(project){
             
         });
 
+        deleteButton.addEventListener("click", function(){
+            let parentDiv = this.parentElement;
+            proj.removeTodo(parentDiv.id);
+            parentDiv.remove();            
+        });
+
         taskDiv.appendChild(testButton);
+        taskDiv.appendChild(deleteButton);
         mainDiv.appendChild(taskDiv);
         divId++;
         
