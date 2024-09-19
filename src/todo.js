@@ -6,9 +6,4 @@ export default class Todo{
         this.dueDate = dueDate;
         this.priority =priority;
     }
-
-    get name(){
-        return this.title;
-    }
-
 }
