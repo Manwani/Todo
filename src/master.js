@@ -13,10 +13,15 @@
     return masterArray;
  }
 
+ function getMasterElement(id){
+   return masterArray[id];
+ }
+
  return{
     addToMaster,
     removeFromMaster,
     getMaster,
+    getMasterElement,
  }
 
 })();
