@@ -9,6 +9,7 @@ import Master from "./master.js";
 let kont = new Todo("val0", "fds", "zatey", "not high");
 let ppcaca = new Todo("val2", "fdssss", "datsy", "high");
 let ppcaca2 = new Todo("val1", "fdssss", "datsy", "high");
+let ppcaca3 = new Todo("PROJ2", "fdssss", "datsy", "LOW");
 let proj = new Project("Inbox");
 let proj2 = new Project("Goals");
 
@@ -20,6 +21,7 @@ proj.addTodo(kont);
 proj.addTodo(ppcaca2);
 proj.addTodo(ppcaca);
 proj2.addTodo(kont);
+proj2.addTodo(ppcaca3);
 //proj.removeTodo(ppcaca2);
 //proj.listTodo();
 
@@ -30,16 +32,19 @@ const addTaskArea = document.getElementById("addTaskArea")
 const todosArea = document.getElementById("todosArea");
 
 function populateProjects(){
-    let buttonId = 0;
+    let projectId = 0;
     for(const project of Master.getMaster()){
             let projectButton = document.createElement("button");
-            projectButton.id = buttonId;
+            projectButton.id = projectId;
             projectButton.textContent = project.name;
-            buttonId++;
+            projectId++;
+            
 
             projectButton.addEventListener("click",function(){
                 refreshScreen();
                 populateTodos(project);
+                Master.setCurrentMasterElement(projectButton.id);
+                
             });
 
             projectBox.appendChild(projectButton);
@@ -63,18 +68,18 @@ addNewTaskButton.addEventListener("click", function(){
 
 
 function populateTodos(project){
-    
+
  
 
     let todoArray = project.Todo;
     sortArrayByDate(todoArray);
-    let divId = 0;
+    let todoId = 0;
 
     for(const result of todoArray){
         
         let taskDiv = document.createElement("div");
         taskDiv.className = "divTasks"
-        taskDiv.id = divId;
+        taskDiv.id = todoId;
 
        /*  for(const detail in result){
             let para = document.createElement("input");
@@ -145,14 +150,15 @@ function populateTodos(project){
         taskDiv.appendChild(testButton);
         taskDiv.appendChild(deleteButton);
         todosArea.appendChild(taskDiv);
-        divId++;
+        todoId++;
         
     }
 
 }
 
-populateTodos(proj);
+//populateTodos(proj);
 populateProjects();
+
 
 function refreshScreen(){
     let screen = document.getElementById("todosArea");
@@ -189,6 +195,14 @@ function openTodoForm(){
     let addTaskDiv = document.createElement("div");
     addTaskDiv.className = "addTaskDiv";
 
+    addButton.addEventListener("click", function(){
+        let currentProject = Master.getCurrentMasterElement();
+        let newTodo = new Todo(para.value, para2.value, para3.value, para4.value);
+        currentProject.addTodo(newTodo);
+        refreshScreen();
+        populateTodos(currentProject);
+    });
+
     cancelButton.addEventListener("click", function(){
         closeTodoForm();
     });
@@ -207,3 +221,4 @@ function openTodoForm(){
 function closeTodoForm(){
     todosArea.firstChild.remove();
 }
+

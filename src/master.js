@@ -1,5 +1,6 @@
  const Master = (function(){
  const masterArray = [];
+ let currentMasterElement;
 
  function addToMaster(project){
     masterArray.push(project);
@@ -13,15 +14,23 @@
     return masterArray;
  }
 
- function getMasterElement(id){
-   return masterArray[id];
+ function setCurrentMasterElement(id){
+   currentMasterElement = masterArray[id];
+ }
+
+ function getCurrentMasterElement(){
+   if(!currentMasterElement){
+      return masterArray[0];
+   }
+   return currentMasterElement;
  }
 
  return{
     addToMaster,
     removeFromMaster,
     getMaster,
-    getMasterElement,
+    setCurrentMasterElement,
+    getCurrentMasterElement,
  }
 
 })();
