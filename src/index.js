@@ -6,22 +6,27 @@ import Master from "./master.js";
 
 
 
-let kont = new Todo("val0", "fds", "zatey", "not high");
-let ppcaca = new Todo("val2", "fdssss", "datsy", "high");
-let ppcaca2 = new Todo("val1", "fdssss", "datsy", "high");
+let kont = new Todo("proj1", "fds", "zatey", "not high");
+let ppcaca = new Todo("proj1 2", "fdssss", "datsy", "high");
+let ppcaca2 = new Todo("proj1 3", "fdssss", "datsy", "high");
 let ppcaca3 = new Todo("PROJ2", "fdssss", "datsy", "LOW");
-let proj = new Project("Inbox");
+let ppcaca4 = new Todo("PROJ3", "fdssss", "datsy", "LOW");
+let ppcaca5 = new Todo("PROJ3 2", "fdssss", "datsy", "LOW");
+let proj = new Project("Vacation");
 let proj2 = new Project("Goals");
+let proj3 = new Project("Dentist");
 
 Master.addToMaster(proj);
 Master.addToMaster(proj2);
+Master.addToMaster(proj3);
 
 
 proj.addTodo(kont);
-proj.addTodo(ppcaca2);
 proj.addTodo(ppcaca);
-proj2.addTodo(kont);
+proj.addTodo(ppcaca2);
 proj2.addTodo(ppcaca3);
+proj3.addTodo(ppcaca4);
+proj3.addTodo(ppcaca5);
 //proj.removeTodo(ppcaca2);
 //proj.listTodo();
 
@@ -31,7 +36,28 @@ const todoBox = document.getElementById("todoBox");
 const addTaskArea = document.getElementById("addTaskArea")
 const todosArea = document.getElementById("todosArea");
 
+const inboxButton = document.createElement("button");
+inboxButton.textContent = "Inbox";
+projectBox.prepend(inboxButton);
+
+inboxButton.addEventListener("click", showAllProjects);
+
+
+const addNewTaskButton = document.createElement("button");
+addNewTaskButton.textContent = "+ Add Todo";
+addTaskArea.appendChild(addNewTaskButton);
+
+addNewTaskButton.addEventListener("click", function(){
+    if(document.getElementsByClassName("addTaskDiv").length > 0){
+        closeTodoForm();
+    } else {
+        openTodoForm();
+    }
+});
+
+
 function populateProjects(){
+
     let projectId = 0;
     for(const project of Master.getMaster()){
             let projectButton = document.createElement("button");
@@ -49,22 +75,11 @@ function populateProjects(){
 
             projectBox.appendChild(projectButton);
         }
+    showAllProjects();
 }
 
 
     
-let addNewTaskButton = document.createElement("button");
-addNewTaskButton.textContent = "+ Add Todo";
-addTaskArea.appendChild(addNewTaskButton);
-
-addNewTaskButton.addEventListener("click", function(){
-    if(document.getElementsByClassName("addTaskDiv").length > 0){
-        closeTodoForm();
-    }
-    else{
-        openTodoForm();
-    }
-});
 
 
 function populateTodos(project){
@@ -78,7 +93,8 @@ function populateTodos(project){
     for(const result of todoArray){
         
         let taskDiv = document.createElement("div");
-        taskDiv.className = "divTasks"
+        taskDiv.className = "divTasks";
+        taskDiv.classList.add(project.name);
         taskDiv.id = todoId;
 
        /*  for(const detail in result){
@@ -104,7 +120,7 @@ function populateTodos(project){
 
         let para4 = document.createElement("input");
         para4.className = "inputy";
-        para4.value = result["title"];
+        para4.value = result["priority"];
 
         taskDiv.appendChild(para);
         taskDiv.appendChild(para2);
@@ -115,7 +131,6 @@ function populateTodos(project){
         let addButton = document.createElement("button");
         addButton.textContent = "add";
 
-
         let testButton = document.createElement("button");
         testButton.textContent = "subby";
 
@@ -125,6 +140,7 @@ function populateTodos(project){
         testButton.addEventListener("click", function(){
             let parentDiv = this.parentElement;
             let collectionArray = parentDiv.querySelectorAll("input");
+            console.log(collectionArray);
             project.editTodo(parentDiv.id, collectionArray);
             
         });
@@ -132,7 +148,9 @@ function populateTodos(project){
         deleteButton.addEventListener("click", function(){
             let parentDiv = this.parentElement;
             project.removeTodo(parentDiv.id);
-            parentDiv.remove();            
+            parentDiv.remove();
+            let updatedCurrentTodos = document.getElementsByClassName(project.name);
+            updateTodos(updatedCurrentTodos);
         });
 
         addButton.addEventListener("click", function(){
@@ -220,5 +238,18 @@ function openTodoForm(){
 
 function closeTodoForm(){
     todosArea.firstChild.remove();
+}
+
+function showAllProjects(){
+    refreshScreen();
+    for(const project of Master.getMaster()){
+        populateTodos(project);
+    }
+}
+
+function updateTodos(updatedCurrentTodos){
+    for(let i = 0; i < updatedCurrentTodos.length; i++){
+        updatedCurrentTodos[i].id = i;
+    }
 }
 
