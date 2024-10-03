@@ -122,10 +122,22 @@ function populateTodos(project){
         para4.className = "inputy";
         para4.value = result["priority"];
 
+
+        let para5 = document.createElement("select");
+        let opt1 = document.createElement("option");
+        opt1.value = project.name;
+        opt1.textContent = project.name;
+        para5.appendChild(opt1);
+        loadOtherProjectsForSelectBox(para5);
+       
+
+
         taskDiv.appendChild(para);
         taskDiv.appendChild(para2);
         taskDiv.appendChild(para3);
         taskDiv.appendChild(para4);
+        taskDiv.appendChild(para5);
+
 
 
         let addButton = document.createElement("button");
@@ -142,6 +154,7 @@ function populateTodos(project){
             let collectionArray = parentDiv.querySelectorAll("input");
             console.log(collectionArray);
             project.editTodo(parentDiv.id, collectionArray);
+            //if project is different from parent class change project.
             
         });
 
@@ -251,5 +264,20 @@ function updateTodos(updatedCurrentTodos){
     for(let i = 0; i < updatedCurrentTodos.length; i++){
         updatedCurrentTodos[i].id = i;
     }
+}
+
+function loadOtherProjectsForSelectBox(selectOptions){
+
+    let checkCurrentValue = selectOptions.firstChild.value;
+
+    for(const project of Master.getMaster()){
+        if(checkCurrentValue !== project.name){
+            let opt = document.createElement("option");
+            opt.value = project.name;
+            opt.textContent = project.name;
+            selectOptions.appendChild(opt);
+        }
+    }
+
 }
 
