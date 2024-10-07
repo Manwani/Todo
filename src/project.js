@@ -15,7 +15,8 @@ export default class Project{
 
         for(const val in whichTodo){
             if(editedTask[counter].value !== whichTodo[val]){
-                console.log("we have an edity");
+
+                console.log(whichTodo[val]);
                 whichTodo[val] = editedTask[counter].value;
             }
             counter++;

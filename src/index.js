@@ -124,6 +124,7 @@ function populateTodos(project){
 
 
         let para5 = document.createElement("select");
+        para5.className = "projectList";
         let opt1 = document.createElement("option");
         opt1.value = project.name;
         opt1.textContent = project.name;
@@ -152,9 +153,11 @@ function populateTodos(project){
         testButton.addEventListener("click", function(){
             let parentDiv = this.parentElement;
             let collectionArray = parentDiv.querySelectorAll("input");
-            console.log(collectionArray);
             project.editTodo(parentDiv.id, collectionArray);
             //if project is different from parent class change project.
+            if(parentDiv.classList[1] !== parentDiv.querySelector("select").value){
+                changeProject(parentDiv, project);
+            }
             
         });
 
@@ -279,5 +282,17 @@ function loadOtherProjectsForSelectBox(selectOptions){
         }
     }
 
+}
+
+function changeProject(parentDiv, oldProject){
+   // project.removeTodo(parentDiv.id);
+    for(const project of Master.getMaster()){
+        if(project.name == parentDiv.querySelector("select").value){
+            project.addTodo(oldProject.Todo[parentDiv.id]);
+            oldProject.removeTodo(parentDiv.id);
+            showAllProjects();
+        }
+    }
+    
 }
 
