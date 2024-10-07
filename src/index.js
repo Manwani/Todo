@@ -285,7 +285,6 @@ function loadOtherProjectsForSelectBox(selectOptions){
 }
 
 function changeProject(parentDiv, oldProject){
-   // project.removeTodo(parentDiv.id);
     for(const project of Master.getMaster()){
         if(project.name == parentDiv.querySelector("select").value){
             project.addTodo(oldProject.Todo[parentDiv.id]);
