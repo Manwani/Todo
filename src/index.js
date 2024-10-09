@@ -6,12 +6,12 @@ import Master from "./master.js";
 
 
 
-let kont = new Todo("proj1", "fds", "zatey", "not high");
-let ppcaca = new Todo("proj1 2", "fdssss", "datsy", "high");
-let ppcaca2 = new Todo("proj1 3", "fdssss", "datsy", "high");
-let ppcaca3 = new Todo("PROJ2", "fdssss", "datsy", "LOW");
-let ppcaca4 = new Todo("PROJ3", "fdssss", "datsy", "LOW");
-let ppcaca5 = new Todo("PROJ3 2", "fdssss", "datsy", "LOW");
+let kont = new Todo("proj1", "fds", "2024-10-01", "not high");
+let ppcaca = new Todo("proj1 2", "fdssss", "2024-10-02", "high");
+let ppcaca2 = new Todo("proj1 3", "fdssss", "2024-10-03", "high");
+let ppcaca3 = new Todo("PROJ2", "fdssss", "2024-10-04", "LOW");
+let ppcaca4 = new Todo("PROJ3", "fdssss", "2024-10-05", "LOW");
+let ppcaca5 = new Todo("PROJ3 2", "fdssss", "2024-10-06", "LOW");
 let proj = new Project("Vacation");
 let proj2 = new Project("Goals");
 let proj3 = new Project("Dentist");
@@ -40,12 +40,14 @@ const inboxButton = document.createElement("button");
 inboxButton.textContent = "Inbox";
 projectBox.prepend(inboxButton);
 
-inboxButton.addEventListener("click", showAllProjects);
+inboxButton.addEventListener("click", function(){
+    showAllProjects();
+});
 
 
 const addNewTaskButton = document.createElement("button");
 addNewTaskButton.textContent = "+ Add Todo";
-addTaskArea.appendChild(addNewTaskButton);
+
 
 addNewTaskButton.addEventListener("click", function(){
     if(document.getElementsByClassName("addTaskDiv").length > 0){
@@ -64,15 +66,13 @@ function populateProjects(){
             projectButton.id = projectId;
             projectButton.textContent = project.name;
             projectId++;
-            
-
             projectButton.addEventListener("click",function(){
                 refreshScreen();
+                addTaskArea.appendChild(addNewTaskButton);
                 populateTodos(project);
                 Master.setCurrentMasterElement(projectButton.id);
                 
             });
-
             projectBox.appendChild(projectButton);
         }
     showAllProjects();
@@ -144,13 +144,13 @@ function populateTodos(project){
         let addButton = document.createElement("button");
         addButton.textContent = "add";
 
-        let testButton = document.createElement("button");
-        testButton.textContent = "subby";
+        let editButton = document.createElement("button");
+        editButton.textContent = "edit";
 
         let deleteButton = document.createElement("button");
         deleteButton.textContent = "delete";
 
-        testButton.addEventListener("click", function(){
+        editButton.addEventListener("click", function(){
             let parentDiv = this.parentElement;
             let collectionArray = parentDiv.querySelectorAll("input");
             project.editTodo(parentDiv.id, collectionArray);
@@ -165,8 +165,14 @@ function populateTodos(project){
             let parentDiv = this.parentElement;
             project.removeTodo(parentDiv.id);
             parentDiv.remove();
-            let updatedCurrentTodos = document.getElementsByClassName(project.name);
-            updateTodos(updatedCurrentTodos);
+            if(checkForAddTaskButton()){
+                refreshScreen();
+                populateTodos(project);
+
+            } else{
+                showAllProjects();
+            }
+            
         });
 
         addButton.addEventListener("click", function(){
@@ -181,7 +187,7 @@ function populateTodos(project){
         });
  
         taskDiv.appendChild(addButton);
-        taskDiv.appendChild(testButton);
+        taskDiv.appendChild(editButton);
         taskDiv.appendChild(deleteButton);
         todosArea.appendChild(taskDiv);
         todoId++;
@@ -231,6 +237,7 @@ function openTodoForm(){
 
     addButton.addEventListener("click", function(){
         let currentProject = Master.getCurrentMasterElement();
+        console.log(para3.value);
         let newTodo = new Todo(para.value, para2.value, para3.value, para4.value);
         currentProject.addTodo(newTodo);
         refreshScreen();
@@ -258,16 +265,12 @@ function closeTodoForm(){
 
 function showAllProjects(){
     refreshScreen();
+    removeAddTaskButton();
     for(const project of Master.getMaster()){
         populateTodos(project);
     }
 }
 
-function updateTodos(updatedCurrentTodos){
-    for(let i = 0; i < updatedCurrentTodos.length; i++){
-        updatedCurrentTodos[i].id = i;
-    }
-}
 
 function loadOtherProjectsForSelectBox(selectOptions){
 
@@ -289,8 +292,30 @@ function changeProject(parentDiv, oldProject){
         if(project.name == parentDiv.querySelector("select").value){
             project.addTodo(oldProject.Todo[parentDiv.id]);
             oldProject.removeTodo(parentDiv.id);
-            showAllProjects();
+            if(checkForAddTaskButton()){
+
+                refreshScreen();
+                populateTodos(oldProject);
+
+            } else{
+                showAllProjects();
+            }
         }
     }
 }
+
+function removeAddTaskButton(){
+    if(checkForAddTaskButton()){
+        addTaskArea.firstChild.remove();
+    }
+}
+
+function checkForAddTaskButton(){
+    if(addTaskArea.firstChild){
+        return true;
+    }
+        return false;
+}
+
+
 
