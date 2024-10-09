@@ -292,6 +292,5 @@ function changeProject(parentDiv, oldProject){
             showAllProjects();
         }
     }
-    
 }
 
