@@ -75,9 +75,42 @@ function populateProjects(){
             });
             projectBox.appendChild(projectButton);
         }
+    createAddProjectButton();
     showAllProjects();
 }
 
+function createAddProjectButton(){
+    let addProjectButton = document.createElement("button");
+    addProjectButton.textContent = "Create Project";
+    projectBox.appendChild(addProjectButton);
+
+    addProjectButton.addEventListener("click", function(){
+      
+      addProjectButton.remove();
+      openAddProjectBox();
+    });
+}
+
+function openAddProjectBox(){
+    let addProjectBoxButtons = document.createElement("div");
+    addProjectBoxButtons.id = "addProjectBoxButtons";
+
+    let projectInput = document.createElement("input");
+    projectInput.placeholder = "Input Project Name";
+    
+
+    let addButton = document.createElement("button");
+    addButton.textContent = "add";
+    let cancelButton = document.createElement("button");
+    cancelButton.textContent = "cancel";
+
+    projectBox.appendChild(projectInput);
+    addProjectBoxButtons.appendChild(addButton);
+    addProjectBoxButtons.appendChild(cancelButton);
+    projectBox.appendChild(addProjectBoxButtons);
+
+
+}
 
     
 
@@ -141,9 +174,9 @@ function populateTodos(project){
 
 
 
-        let addButton = document.createElement("button");
+        /* let addButton = document.createElement("button");
         addButton.textContent = "add";
-
+ */
         let editButton = document.createElement("button");
         editButton.textContent = "edit";
 
@@ -165,17 +198,11 @@ function populateTodos(project){
             let parentDiv = this.parentElement;
             project.removeTodo(parentDiv.id);
             parentDiv.remove();
-            if(checkForAddTaskButton()){
-                refreshScreen();
-                populateTodos(project);
-
-            } else{
-                showAllProjects();
-            }
+            checkForAddTaskButton(project);
             
         });
 
-        addButton.addEventListener("click", function(){
+        /* addButton.addEventListener("click", function(){
             let parentDiv = this.parentElement;
             let collectionArray = parentDiv.querySelectorAll("input");
             let newTodo = new Todo (collectionArray[0].value,collectionArray[1].value,
@@ -184,9 +211,9 @@ function populateTodos(project){
             refreshScreen();
             populateTodos(project);
               
-        });
+        }); */
  
-        taskDiv.appendChild(addButton);
+        //taskDiv.appendChild(addButton);
         taskDiv.appendChild(editButton);
         taskDiv.appendChild(deleteButton);
         todosArea.appendChild(taskDiv);
@@ -292,29 +319,25 @@ function changeProject(parentDiv, oldProject){
         if(project.name == parentDiv.querySelector("select").value){
             project.addTodo(oldProject.Todo[parentDiv.id]);
             oldProject.removeTodo(parentDiv.id);
-            if(checkForAddTaskButton()){
-
-                refreshScreen();
-                populateTodos(oldProject);
-
-            } else{
-                showAllProjects();
-            }
+            checkForAddTaskButton(oldProject);
         }
     }
 }
 
 function removeAddTaskButton(){
-    if(checkForAddTaskButton()){
+    if(addTaskArea.firstChild){
         addTaskArea.firstChild.remove();
     }
 }
 
-function checkForAddTaskButton(){
+//function used to figure out if user is viewing all projects or a single project
+function checkForAddTaskButton(project){
     if(addTaskArea.firstChild){
-        return true;
-    }
-        return false;
+        refreshScreen();
+        populateTodos(project);
+    } else{
+        showAllProjects();
+    }        
 }
 
 
